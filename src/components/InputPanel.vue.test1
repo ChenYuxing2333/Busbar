@@ -1,0 +1,690 @@
+﻿<template>
+  <div
+    class="bg-surface-50 dark:bg-surface-900 border border-surface-200 dark:border-surface-700 p-5 space-y-5 rounded shadow-card"
+  >
+    <div
+      class="flex items-center justify-between mb-1 pb-3 border-b border-surface-200 dark:border-surface-700"
+    >
+      <h3
+        class="text-sm font-bold text-surface-700 dark:text-surface-300 flex items-center gap-2"
+      >
+        <el-icon class="text-primary-600 dark:text-primary-500"
+          ><ElIconSetting
+        /></el-icon>
+        鍙傛暟閰嶇疆
+      </h3>
+      <div class="flex items-center gap-2">
+        <el-tooltip content="閲嶇疆涓洪粯璁ゅ€? placement="top">
+          <el-button
+            text
+            size="small"
+            class="!text-surface-500 hover:!text-semantic-error"
+            @click="handleReset"
+          >
+            <el-icon><ElIconRefreshRight /></el-icon>
+          </el-button>
+        </el-tooltip>
+        <el-tag
+          size="small"
+          effect="plain"
+          class="!bg-surface-100 dark:!bg-surface-800 !border-surface-200 dark:!border-surface-700 !text-surface-600 dark:!text-surface-400 font-mono tracking-tight"
+        >
+          {{ form.standard }}
+        </el-tag>
+      </div>
+    </div>
+
+    <el-form :model="form" label-position="top" size="default">
+      <!-- 鈻?璁惧鍙傛暟 -->
+      <div class="space-y-3">
+        <div
+          class="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-surface-500 dark:text-surface-400"
+        >
+          <div class="h-px flex-1 bg-surface-200 dark:bg-surface-700"></div>
+          <span>璁惧鍙傛暟</span>
+          <div class="h-px flex-1 bg-surface-200 dark:bg-surface-700"></div>
+        </div>
+
+        <el-form-item label="UPS 瀹归噺 (kVA)">
+          <el-input-number
+            v-model="form.kva"
+            :min="10"
+            :max="3000"
+            :step="10"
+            class="!w-full"
+          />
+        </el-form-item>
+
+        <el-form-item label="绯荤粺鐢靛帇 (V)">
+          <el-select v-model="form.voltage" class="!w-full">
+            <el-option label="480V (涓夌浉)" :value="480" />
+            <el-option label="415V (涓夌浉)" :value="415" />
+            <el-option label="400V (涓夌浉)" :value="400" />
+            <el-option label="380V (涓夌浉)" :value="380" />
+            <el-option label="220V (鍗曠浉)" :value="220" />
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="閫傜敤鏍囧噯">
+          <el-radio-group v-model="form.standard" class="!w-full">
+            <el-radio-button label="IEC">IEC / GB</el-radio-button>
+            <el-radio-button label="UL">UL</el-radio-button>
+          </el-radio-group>
+          <div
+            v-if="form.standard === 'UL'"
+            class="text-xs text-semantic-warning mt-1.5 flex items-center gap-1"
+          >
+            <el-icon><ElIconWarningFilled /></el-icon> UL 鏍囧噯绂佺敤椋庡喎淇绯绘暟
+          </div>
+        </el-form-item>
+
+        <el-form-item label="鏉愭枡閫夋嫨">
+          <el-radio-group v-model="form.material" class="!w-full">
+            <el-radio-button label="copper">閾滄帓 (TMY)</el-radio-button>
+            <el-radio-button label="aluminum">閾濇帓 (LMY)</el-radio-button>
+          </el-radio-group>
+          <div class="text-[11px] text-surface-500 dark:text-surface-400 mt-1.5">
+            <el-icon class="mr-0.5"><ElIconInfoFilled /></el-icon>
+            {{
+              form.material === "aluminum"
+                ? "閾濇帓杞芥祦閲忊増閾滄帓61%锛岄噸閲忚交銆佹垚鏈綆"
+                : "閾滄帓瀵肩數鐜囬珮銆佽浇娴侀噺澶?
+            }}
+          </div>
+        </el-form-item>
+      </div>
+
+      <!-- 鈻?鐜鍙傛暟 -->
+      <div class="space-y-3 mt-2">
+        <div
+          class="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-surface-500 dark:text-surface-400"
+        >
+          <div class="h-px flex-1 bg-surface-200 dark:bg-surface-700"></div>
+          <span>鐜鍙傛暟</span>
+          <div class="h-px flex-1 bg-surface-200 dark:bg-surface-700"></div>
+        </div>
+
+        <!-- 鐜娓╁害 Slider -->
+        <el-form-item>
+          <template #label>
+            <div class="flex items-center justify-between w-full">
+              <span>鐜娓╁害</span>
+              <span
+                class="font-mono text-[11px] px-1.5 py-0.5 rounded transition-all duration-300"
+                :class="
+                  correctionK.temp >= 1
+                    ? 'text-semantic-success bg-semantic-success/10'
+                    : correctionK.temp >= 0.9
+                      ? 'text-primary-600 dark:text-primary-500 bg-cyan-950/30'
+                      : 'text-semantic-warning bg-semantic-warning/10'
+                "
+                >K = {{ correctionK.temp.toFixed(2) }}</span
+              >
+            </div>
+          </template>
+          <div class="w-full px-1">
+            <div class="flex justify-between items-center mb-1">
+              <span class="text-xs text-surface-500 dark:text-surface-400">25鈩?/span>
+              <span class="font-mono text-sm font-bold text-primary-600 dark:text-primary-500"
+                >{{ form.temp }}鈩?/span
+              >
+              <span class="text-xs text-surface-500 dark:text-surface-400">50鈩?/span>
+            </div>
+            <el-slider
+              v-model="form.temp"
+              :min="25"
+              :max="50"
+              :step="5"
+              :marks="{
+                25: '25',
+                30: '30',
+                35: '35',
+                40: '40',
+                45: '45',
+                50: '50',
+              }"
+              :show-tooltip="false"
+            />
+          </div>
+        </el-form-item>
+
+        <!-- 娴锋嫈楂樺害 Slider -->
+        <el-form-item>
+          <template #label>
+            <div class="flex items-center justify-between w-full">
+              <span>娴锋嫈楂樺害</span>
+              <span
+                class="font-mono text-[11px] px-1.5 py-0.5 rounded transition-all duration-300"
+                :class="
+                  correctionK.alt >= 1
+                    ? 'text-semantic-success bg-semantic-success/10'
+                    : correctionK.alt >= 0.95
+                      ? 'text-primary-600 dark:text-primary-500 bg-cyan-950/30'
+                      : 'text-semantic-warning bg-semantic-warning/10'
+                "
+                >K = {{ correctionK.alt.toFixed(2) }}</span
+              >
+            </div>
+          </template>
+          <div class="w-full px-1">
+            <div class="flex justify-between items-center mb-1">
+              <span class="text-xs text-surface-500 dark:text-surface-400">1000m</span>
+              <span class="font-mono text-sm font-bold text-primary-600 dark:text-primary-500"
+                >{{ form.altitude }}m</span
+              >
+              <span class="text-xs text-surface-500 dark:text-surface-400">4000m</span>
+            </div>
+            <el-slider
+              v-model="form.altitude"
+              :min="1000"
+              :max="4000"
+              :step="1000"
+              :marks="{ 1000: '1k', 2000: '2k', 3000: '3k', 4000: '4k' }"
+              :show-tooltip="false"
+            />
+          </div>
+        </el-form-item>
+      </div>
+
+      <!-- 鈻?鏁ｇ儹鏉′欢 -->
+      <div class="space-y-3 mt-2">
+        <div
+          class="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-surface-500 dark:text-surface-400"
+        >
+          <div class="h-px flex-1 bg-surface-200 dark:bg-surface-700"></div>
+          <span>鏁ｇ儹鏉′欢</span>
+          <div class="h-px flex-1 bg-surface-200 dark:bg-surface-700"></div>
+        </div>
+
+        <el-form-item label="鏁ｇ儹鏂瑰紡">
+          <el-radio-group v-model="form.cooling">
+            <el-radio label="natural">鑷劧瀵规祦</el-radio>
+            <el-radio label="forced" :disabled="form.standard === 'UL'"
+              >寮鸿揩椋庡喎</el-radio
+            >
+          </el-radio-group>
+        </el-form-item>
+
+        <transition name="el-zoom-in-top">
+          <div
+            v-if="form.cooling === 'forced'"
+            class="rounded-lg bg-primary-50 dark:bg-surface-800 border border-primary-200 dark:border-primary-900 p-4 space-y-3"
+          >
+            <div class="flex justify-between items-center">
+              <span class="text-xs text-surface-600 dark:text-surface-400">椋庨€?(m/s)</span>
+              <span class="font-mono text-sm font-bold text-primary-600 dark:text-primary-500"
+                >{{ form.wind }} m/s</span
+              >
+            </div>
+            <el-slider
+              v-model="form.wind"
+              :min="0.5"
+              :max="3.0"
+              :step="0.5"
+              :marks="{ 0.5: '0.5', 1: '1.0', 2: '2.0', 3: '3.0' }"
+            />
+            <div class="text-center text-xs font-mono">
+              <span class="text-primary-600 dark:text-primary-500">
+                <el-icon class="mr-0.5"><ElIconWindPower /></el-icon>
+                棰勮杞芥祦鎻愬崌: +{{ windBonus }}%
+              </span>
+              <span class="text-surface-500 dark:text-surface-400 ml-2"
+                >(K={{ correctionK.wind.toFixed(2) }})</span
+              >
+            </div>
+
+            <!-- 椋庢墖澶辨晥妯℃嫙寮€鍏?-->
+            <div
+              class="flex items-center justify-between pt-2 border-t border-cyan-900/30"
+            >
+              <div class="flex items-center gap-2">
+                <div
+                  class="w-1.5 h-1.5 rounded-full"
+                  :class="
+                    form.fanFailure
+                      ? 'bg-red-500 animate-pulse'
+                      : 'bg-surface-400 dark:bg-surface-600'
+                  "
+                ></div>
+                <span class="text-xs text-surface-600 dark:text-surface-400">椋庢墖澶辨晥妯℃嫙</span>
+              </div>
+              <el-switch
+                v-model="form.fanFailure"
+                active-color="#ef4444"
+                inactive-color="#334155"
+                size="small"
+              />
+            </div>
+          </div>
+        </transition>
+      </div>
+
+      <!-- 鈻?鍥炶矾绯绘暟 -->
+      <div class="space-y-3 mt-2">
+        <div
+          class="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-surface-500 dark:text-surface-400"
+        >
+          <div class="h-px flex-1 bg-surface-200 dark:bg-surface-700"></div>
+          <span>鍥炶矾绯绘暟</span>
+          <div class="h-px flex-1 bg-surface-200 dark:bg-surface-700"></div>
+        </div>
+
+        <el-form-item label="鏃佽矾杩囪浇绯绘暟">
+          <el-radio-group v-model="form.bypassFactor">
+            <el-radio :label="1.0">脳1.0</el-radio>
+            <el-radio :label="1.1">脳1.1</el-radio>
+            <el-radio :label="1.25">脳1.25</el-radio>
+            <el-radio :label="1.5">脳1.5</el-radio>
+          </el-radio-group>
+          <div class="text-[11px] text-surface-500 dark:text-surface-400 mt-1">
+            {{
+              form.bypassFactor <= 1.0
+                ? "鏃佽矾=杈撳嚭鍚岃鏍?
+                : form.bypassFactor <= 1.1
+                  ? "10%浣欓噺 (杞昏浇鍦烘櫙)"
+                  : form.bypassFactor <= 1.25
+                    ? "IEC 62040-3 鏍囧噯 (125%/10min)"
+                    : "瑕嗙洊150%/60s鐭椂杩囪浇"
+            }}
+          </div>
+        </el-form-item>
+
+        <el-form-item label="璐熻浇绫诲瀷 (璋愭尝)">
+          <el-select
+            v-model="form.loadType"
+            class="!w-full"
+            @change="onLoadTypeChange"
+          >
+            <el-option
+              v-for="lt in HARMONIC_LOAD_TYPES"
+              :key="lt.key"
+              :label="lt.label"
+              :value="lt.key"
+            >
+              <div class="flex items-center justify-between w-full">
+                <span>{{ lt.label }}</span>
+                <span class="text-xs text-surface-500 dark:text-surface-400 ml-3"
+                  >THD {{ lt.thd }} 路 {{ lt.note }}</span
+                >
+              </div>
+            </el-option>
+          </el-select>
+          <div v-if="harmonicInfo" class="text-[11px] text-surface-500 dark:text-surface-400 mt-1">
+            N绾跨郴鏁?
+            <span class="text-primary-600 dark:text-primary-500 font-mono"
+              >脳{{ harmonicInfo.neutralFactor?.toFixed(2) || "N/A" }}</span
+            >
+            路 THD: {{ harmonicInfo.thd }} 路 {{ harmonicInfo.note }}
+          </div>
+        </el-form-item>
+
+        <el-form-item label="N绾挎墜鍔ㄧ郴鏁?>
+          <el-radio-group v-model="form.neutralFactor">
+            <el-radio :label="1.0">脳1.0</el-radio>
+            <el-radio :label="1.45">脳1.45</el-radio>
+            <el-radio :label="1.73">脳1.73</el-radio>
+            <el-radio :label="2.0">脳2.0</el-radio>
+          </el-radio-group>
+        </el-form-item>
+      </div>
+
+      <!-- 鈻?閫夊瀷瑙勫垯 -->
+      <div class="space-y-3 mt-2">
+        <div
+          class="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-surface-500 dark:text-surface-400"
+        >
+          <div class="h-px flex-1 bg-surface-200 dark:bg-surface-700"></div>
+          <span>閫夊瀷瑙勫垯</span>
+          <div class="h-px flex-1 bg-surface-200 dark:bg-surface-700"></div>
+        </div>
+
+        <el-checkbox v-model="form.allowStacking" border class="!w-full">
+          鍏佽姣嶆帓鍙犲姞 (2~3 鐗?
+        </el-checkbox>
+        <div class="text-[11px] text-surface-500 dark:text-surface-400">
+          榛樿浠呮帹鑽愬崟灞傛瘝鎺掞紝鍕鹃€夊悗鍖呭惈澶氱墖鍙犲姞鏂规
+        </div>
+      </div>
+
+      <!-- 鈻?鐢垫睜鍥炶矾 -->
+      <div class="space-y-3 mt-2">
+        <div
+          class="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-surface-500 dark:text-surface-400"
+        >
+          <div class="h-px flex-1 bg-surface-200 dark:bg-surface-700"></div>
+          <span>鐢垫睜鍥炶矾</span>
+          <div class="h-px flex-1 bg-surface-200 dark:bg-surface-700"></div>
+        </div>
+
+        <div class="flex items-center justify-between">
+          <span class="text-sm text-surface-600 dark:text-surface-400">鍚敤鐢垫睜鍥炶矾璁＄畻</span>
+          <el-switch
+            v-model="form.batteryEnabled"
+            active-color="#06b6d4" class="dark:!opacity-90"
+            inactive-color="#334155"
+            size="small"
+          />
+        </div>
+
+        <transition name="el-zoom-in-top">
+          <div
+            v-if="form.batteryEnabled"
+            class="space-y-3 rounded-lg bg-surface-50 dark:bg-surface-800 border border-surface-200 dark:border-surface-700 p-4"
+          >
+            <el-form-item label="鐢垫睜缁勭數鍘?(V DC)">
+              <el-select v-model="form.batteryVoltage" class="!w-full">
+                <el-option
+                  v-for="v in batteryVoltages"
+                  :key="v.value"
+                  :label="v.label"
+                  :value="v.value"
+                >
+                  <div class="flex items-center justify-between w-full">
+                    <span class="font-mono">{{ v.label }}</span>
+                    <span class="text-xs text-surface-500 dark:text-surface-400 ml-3"
+                      >{{ v.cells }} 路 {{ v.note }}</span
+                    >
+                  </div>
+                </el-option>
+              </el-select>
+            </el-form-item>
+
+            <el-form-item label="鍔熺巼鍥犳暟 (PF)">
+              <el-input-number
+                v-model="form.powerFactor"
+                :min="0.7"
+                :max="1.0"
+                :step="0.01"
+                :precision="2"
+                class="!w-full"
+              />
+              <div class="text-[11px] text-surface-500 dark:text-surface-400 mt-1">
+                UPS 鏍囩О杈撳嚭鍔熺巼鍥犳暟锛岄€氬父涓?0.9 鎴?1.0
+              </div>
+            </el-form-item>
+
+            <el-form-item label="閫嗗彉鏁堢巼 (%)">
+              <el-input-number
+                v-model="form.inverterEff"
+                :min="85"
+                :max="99"
+                :step="1"
+                class="!w-full"
+              />
+            </el-form-item>
+
+            <el-form-item>
+              <template #label>
+                <div class="flex items-center gap-1">
+                  <span>鐢垫睜瀹归噺 (Ah)</span>
+                  <el-tooltip
+                    content="濉叆鍚庤嚜鍔ㄨ绠楀厖鐢电數娴佸苟鍙栬緝澶у€间綔涓鸿璁＄數娴併€傜暀 0 鍒欏彧鎸夋斁鐢电數娴侀€夊瀷銆?
+                    placement="top"
+                  >
+                    <el-icon class="text-surface-500 dark:text-surface-400 cursor-help"
+                      ><ElIconQuestionFilled
+                    /></el-icon>
+                  </el-tooltip>
+                </div>
+              </template>
+              <el-input-number
+                v-model="form.batteryCapacity"
+                :min="0"
+                :step="50"
+                class="!w-full"
+                placeholder="0 = 浠呮寜鏀剧數閫夊瀷"
+              />
+            </el-form-item>
+
+            <transition name="el-zoom-in-top">
+              <el-form-item
+                v-if="form.batteryCapacity > 0"
+                label="鍏呯數鍊嶇巼 (C)"
+              >
+                <el-radio-group v-model="form.chargeRate">
+                  <el-radio :label="0.1">0.1C</el-radio>
+                  <el-radio :label="0.15">0.15C</el-radio>
+                  <el-radio :label="0.2">0.2C</el-radio>
+                </el-radio-group>
+                <div class="text-[11px] text-surface-500 dark:text-surface-400 mt-1">
+                  鍏呯數鐢垫祦 = {{ form.batteryCapacity }} 脳
+                  {{ form.chargeRate }} =
+                  {{ Math.ceil(form.batteryCapacity * form.chargeRate) }} A
+                </div>
+              </el-form-item>
+            </transition>
+
+            <el-form-item label="瀹夊叏绯绘暟">
+              <el-radio-group v-model="form.batterySafetyFactor">
+                <el-radio :label="1.0">脳1.0</el-radio>
+                <el-radio :label="1.25">脳1.25</el-radio>
+                <el-radio :label="1.5">脳1.5</el-radio>
+              </el-radio-group>
+              <div class="text-[11px] text-surface-500 dark:text-surface-400 mt-1">
+                IEC 62040-3 鎺ㄨ崘 脳1.25
+              </div>
+            </el-form-item>
+          </div>
+        </transition>
+      </div>
+
+      <!-- 鈻?缁撴瀯鍙傛暟 (v2.2) -->
+      <div class="space-y-3 mt-2">
+        <div
+          class="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-surface-500 dark:text-surface-400"
+        >
+          <div class="h-px flex-1 bg-surface-200 dark:bg-surface-700"></div>
+          <span>缁撴瀯鍙傛暟</span>
+          <div class="h-px flex-1 bg-surface-200 dark:bg-surface-700"></div>
+        </div>
+
+        <el-form-item label="瀹夎鏂瑰紡">
+          <el-select v-model="form.mounting" class="!w-full">
+            <el-option label="鍨傜洿瀹夎 (鍩哄噯)" value="vertical" />
+            <el-option label="姘村钩瀹夎 (脳0.95)" value="horizontal" />
+            <el-option label="渚у崸瀹夎 (脳0.92)" value="edge" />
+            <el-option label="灏侀棴鏌滃唴 (脳0.85)" value="enclosed" />
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="闃叉姢绛夌骇">
+          <el-select v-model="form.ipRating" class="!w-full">
+            <el-option label="IP20 (脳1.0)" value="IP20" />
+            <el-option label="IP30 (脳0.98)" value="IP30" />
+            <el-option label="IP40 (脳0.96)" value="IP40" />
+            <el-option label="IP54 (脳0.93)" value="IP54" />
+            <el-option label="IP65 (脳0.88)" value="IP65" />
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="鐩稿婀垮害 (%)">
+          <el-select v-model="form.humidity" class="!w-full">
+            <el-option :label="'50% (脳1.0)'" :value="50" />
+            <el-option :label="'60% (脳0.99)'" :value="60" />
+            <el-option :label="'70% (脳0.98)'" :value="70" />
+            <el-option :label="'80% (脳0.96)'" :value="80" />
+            <el-option :label="'90% (脳0.94)'" :value="90" />
+            <el-option :label="'95% (脳0.92)'" :value="95" />
+          </el-select>
+        </el-form-item>
+      </div>
+
+      <!-- 鈻?鐭矾鍙傛暟 (v2.2 P1) -->
+      <div class="space-y-3 mt-2">
+        <div
+          class="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-surface-500 dark:text-surface-400"
+        >
+          <div class="h-px flex-1 bg-surface-200 dark:bg-surface-700"></div>
+          <span>鐭矾鍙傛暟</span>
+          <div class="h-px flex-1 bg-surface-200 dark:bg-surface-700"></div>
+        </div>
+
+        <el-form-item label="棰勬湡鐭矾鐢垫祦 (kA)">
+          <el-input-number
+            v-model="form.shortCircuitCurrent"
+            :min="0"
+            :max="200"
+            :step="5"
+            :precision="1"
+            class="!w-full"
+            placeholder="0 = 涓嶆牎楠?
+          />
+          <div class="text-[11px] text-surface-500 dark:text-surface-400 mt-1">
+            濉叆涓婃父鍙樺帇鍣?姣嶇嚎鐨勯鏈熺煭璺數娴侊紝鑷姩鏍￠獙姣嶆帓鑰愬彈鑳藉姏
+          </div>
+        </el-form-item>
+
+        <el-form-item label="鐩搁棿璺?(mm)">
+          <el-input-number
+            v-model="form.phaseSpacing"
+            :min="50"
+            :max="500"
+            :step="10"
+            class="!w-full"
+          />
+          <div class="text-[11px] text-surface-500 dark:text-surface-400 mt-1">
+            姣嶆帓涓績璺濓紝鐢ㄤ簬璁＄畻鐭矾鐢靛姩鍔涘拰鏀拺闂磋窛
+          </div>
+        </el-form-item>
+      </div>
+
+      <!-- 鈻?骞舵満閰嶇疆 (v2.2 P2) -->
+      <div class="space-y-3 mt-2">
+        <div
+          class="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-surface-500 dark:text-surface-400"
+        >
+          <div class="h-px flex-1 bg-surface-200 dark:bg-surface-700"></div>
+          <span>骞舵満閰嶇疆</span>
+          <div class="h-px flex-1 bg-surface-200 dark:bg-surface-700"></div>
+        </div>
+
+        <div class="flex items-center justify-between">
+          <span class="text-sm text-surface-600 dark:text-surface-400">鍚敤骞舵満璁＄畻</span>
+          <el-switch
+            v-model="form.parallelEnabled"
+            active-color="#06b6d4" class="dark:!opacity-90"
+            inactive-color="#334155"
+            size="small"
+          />
+        </div>
+
+        <transition name="el-zoom-in-top">
+          <div
+            v-if="form.parallelEnabled"
+            class="space-y-3 rounded-lg bg-purple-950/20 border border-purple-900/30 p-4"
+          >
+            <el-form-item label="骞舵満鎬诲彴鏁?(N+X)">
+              <el-input-number
+                v-model="form.parallelCount"
+                :min="2"
+                :max="8"
+                :step="1"
+                class="!w-full"
+              />
+            </el-form-item>
+            <el-form-item label="鍐椾綑鍙版暟 (X)">
+              <el-input-number
+                v-model="form.parallelRedundant"
+                :min="0"
+                :max="form.parallelCount - 1"
+                :step="1"
+                class="!w-full"
+              />
+              <div class="text-[11px] text-surface-500 dark:text-surface-400 mt-1">
+                {{ form.parallelCount - form.parallelRedundant }}+{{
+                  form.parallelRedundant
+                }}
+                閰嶇疆锛?鎬诲閲?
+                {{
+                  form.kva * (form.parallelCount - form.parallelRedundant)
+                }}
+                kVA
+              </div>
+            </el-form-item>
+          </div>
+        </transition>
+      </div>
+    </el-form>
+
+    <!-- 灞呬腑鑷畾涔夐鏍奸噸缃‘璁ゅ璇濇 -->
+    <Teleport to="body">
+      <transition name="el-fade-in">
+        <div
+          v-if="showResetDialog"
+          class="fixed inset-0 z-[9999] flex items-center justify-center bg-slate-950/80 backdrop-blur-sm px-4"
+        >
+          <div
+            class="glass-panel p-6 max-w-sm w-full border border-slate-700/50 shadow-2xl rounded-xl space-y-5"
+            @click.stop
+          >
+            <div class="flex items-center gap-3">
+              <div
+                class="w-10 h-10 rounded-full bg-amber-500/20 flex items-center justify-center shrink-0"
+              >
+                <el-icon class="text-xl text-amber-500"
+                  ><ElIconWarningFilled
+                /></el-icon>
+              </div>
+              <h3 class="text-lg font-bold text-slate-200">纭閲嶇疆</h3>
+            </div>
+            <p class="text-sm text-surface-600 dark:text-surface-400 leading-relaxed">
+              鎮ㄥ綋鍓嶇殑鍘嬮檷閰嶇疆銆佽嚜瀹氫箟姣嶆帓鍙傛暟浠ュ強鍚勭浉闀跨煭绛夋暟鎹兘灏嗚褰诲簳娓呴櫎骞舵仮澶嶄负榛樿銆傛鎿嶄綔涓嶅彲鎭㈠銆?
+            </p>
+            <div class="flex gap-3 justify-end pt-2">
+              <button
+                class="px-5 py-2.5 rounded-lg text-sm font-medium bg-surface-200 dark:bg-surface-700 text-slate-300 hover:bg-slate-700 hover:text-white transition-colors flex-1"
+                @click="showResetDialog = false"
+              >
+                鍙栨秷
+              </button>
+              <button
+                class="px-5 py-2.5 rounded-lg text-sm font-medium bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-white transition-all shadow-lg flex-1"
+                @click="confirmReset"
+              >
+                纭閲嶇疆
+              </button>
+            </div>
+          </div>
+        </div>
+      </transition>
+    </Teleport>
+  </div>
+</template>
+
+<script setup>
+import { ref } from "vue";
+import { ElMessage } from "element-plus";
+import { useSmartBusbar } from "../composables/useSmartBusbar.js";
+import { BATTERY_VOLTAGES, HARMONIC_LOAD_TYPES } from "../constants/index.js";
+
+const { form, correctionK, windBonus, resetToDefault, harmonicInfo } =
+  useSmartBusbar();
+
+const showResetDialog = ref(false);
+
+const batteryVoltages = BATTERY_VOLTAGES;
+
+// 褰撹礋杞界被鍨嬪彉鍖栨椂锛岃嚜鍔ㄦ洿鏂癗绾跨郴鏁?
+function onLoadTypeChange(val) {
+  const entry = HARMONIC_LOAD_TYPES.find((h) => h.key === val);
+  if (entry && entry.neutralFactor !== null) {
+    form.neutralFactor = entry.neutralFactor;
+  }
+}
+
+/**
+ * 澶勭悊閲嶇疆鎿嶄綔
+ */
+function handleReset() {
+  showResetDialog.value = true;
+}
+
+function confirmReset() {
+  resetToDefault();
+  showResetDialog.value = false;
+  ElMessage.success("宸查噸缃负绯荤粺榛樿鍊?);
+}
+</script>
+
+
+
