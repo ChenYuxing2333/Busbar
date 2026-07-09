@@ -2,7 +2,7 @@
   <div class="min-h-screen bg-surface-50 dark:bg-surface-950 text-surface-800 dark:text-surface-200">
     <!-- ─── 顶部导航栏 ─── -->
     <header
-      class="sticky top-0 z-50 h-14 flex items-center justify-between px-5 bg-surface-50/90 dark:bg-surface-900/80 backdrop-blur-xl backdrop-blur-xl border-b border-surface-200 dark:border-surface-800/60"
+      class="sticky top-0 z-50 h-14 flex items-center justify-between px-5 bg-surface-50 dark:bg-surface-900 border-b border-surface-200 dark:border-surface-800/60"
     >
       <div class="flex items-center gap-3">
         <div
@@ -34,7 +34,7 @@
           >
           <span class="text-surface-500 dark:text-surface-400">=</span>
           <span
-            class="text-surface-900 dark:text-surface-900 dark:text-surface-900 dark:text-white font-bold px-1.5 py-0.5 rounded bg-surface-200 dark:bg-surface-800 border border-surface-200 dark:border-surface-700/50"
+            class="text-surface-900 dark:text-white font-bold px-1.5 py-0.5 rounded bg-surface-200 dark:bg-surface-800 border border-surface-200 dark:border-surface-700/50"
             >{{ correctionK.total.toFixed(3) }}</span
           >
         </div>
@@ -100,7 +100,7 @@
                 }}</span>
                 <div
                   v-if="activeCircuit === c.key"
-                  class="absolute bottom-0 left-1/2 -translate-x-1/2 w-12 h-0.5 bg-cyan-400 rounded-full"
+                  class="absolute bottom-0 left-1/2 -translate-x-1/2 w-12 h-0.5 bg-primary-400 rounded-full"
                 ></div>
               </button>
             </div>
@@ -122,7 +122,7 @@
           <!-- 风扇失效告警 -->
           <div
             v-if="fanFailureResult"
-            class="glass-panel border-red-900/50 bg-red-950/30 p-5"
+            class="glass-panel border-semantic-error/20 bg-semantic-error/5 p-5"
           >
             <div class="flex items-center gap-2 mb-3">
               <div class="w-2 h-2 rounded-full bg-semantic-error animate-pulse"></div>
@@ -227,13 +227,13 @@
             </li>
             <li>
               <span
-                class="inline-block w-2 h-2 rounded-full bg-green-500 mr-2"
+                class="inline-block w-2 h-2 rounded-full bg-semantic-success mr-2"
               ></span
               ><strong>标准型</strong>：负荷率 70%~90% (推荐)
             </li>
             <li>
               <span
-                class="inline-block w-2 h-2 rounded-full bg-blue-500 mr-2"
+                class="inline-block w-2 h-2 rounded-full bg-semantic-info mr-2"
               ></span
               ><strong>保守型</strong>：负荷率 &lt;70%
             </li>

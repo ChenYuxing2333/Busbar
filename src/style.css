@@ -267,11 +267,17 @@ html, body {
 /* Custom Utility Classes */
 @layer components {
   .glass-panel {
-    @apply bg-surface-800/80 backdrop-blur-xl border border-surface-700/50 rounded-xl;
+    @apply bg-surface-800 border border-surface-700/50 rounded-xl;
   }
 
   .stat-card {
-    @apply relative overflow-hidden rounded-lg border border-surface-700/50 p-4;
+    @apply relative overflow-hidden rounded-lg border p-4;
+    border-color: theme('colors.surface.200');
+    background: linear-gradient(135deg, theme('colors.surface.50') 0%, theme('colors.surface.100') 100%);
+  }
+
+  .dark .stat-card {
+    border-color: theme('colors.surface.700 / 0.5');
     background: linear-gradient(135deg, #111827 0%, #0a0f1a 100%);
   }
 
@@ -381,4 +387,29 @@ html, body {
 
 .el-slider__stop {
   background-color: #475569 !important;
+}
+
+/* ─── Reduced Motion ─── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ─── Focus States (Keyboard Navigation) ─── */
+:focus-visible {
+  outline: 2px solid #06b6d4;
+  outline-offset: 2px;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid #06b6d4;
+  outline-offset: 2px;
 }

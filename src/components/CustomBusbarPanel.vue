@@ -181,7 +181,7 @@
               </div>
               <div class="text-[10px] text-surface-500 dark:text-surface-400 mt-2 text-center">
                 <span class="inline-block w-2 h-2 rounded-full bg-violet-500 mr-1 relative" style="top: 1px"></span>自定义
-                <span class="ml-3 inline-block w-2 h-2 rounded-full bg-cyan-500 mr-1 relative" style="top: 1px"></span>系统推荐 (标准型)
+                <span class="ml-3 inline-block w-2 h-2 rounded-full bg-primary-500 mr-1 relative" style="top: 1px"></span>系统推荐 (标准型)
               </div>
             </div>
           </div>

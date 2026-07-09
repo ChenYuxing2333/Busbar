@@ -29,7 +29,7 @@
       <el-button @click="showExport = false">取消</el-button>
       <el-button
         type="primary"
-        class="!bg-cyan-600 !border-cyan-600"
+        class="!bg-primary-600 !border-primary-600"
         :loading="exporting"
         @click="handleExport"
       >

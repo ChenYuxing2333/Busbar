@@ -1,7 +1,7 @@
 <template>
   <div v-if="hasAnyData" class="glass-panel p-5 space-y-4">
     <div class="flex items-center gap-2 mb-1">
-      <div class="w-2 h-2 rounded-full" :class="overallStatus === 'danger' ? 'bg-semantic-error animate-pulse' : overallStatus === 'warning' ? 'bg-amber-500' : 'bg-emerald-500'"></div>
+      <div class="w-2 h-2 rounded-full" :class="overallStatus === 'danger' ? 'bg-semantic-error animate-pulse' : overallStatus === 'warning' ? 'bg-semantic-warning' : 'bg-semantic-success'"></div>
       <h3 class="text-sm font-bold text-surface-700 dark:text-surface-300">安全校验 & 工程参数</h3>
       <el-tag v-if="overallStatus === 'danger'" type="danger" size="small" effect="dark" round>异常</el-tag>
       <el-tag v-else-if="overallStatus === 'warning'" type="warning" size="small" effect="dark" round>注意</el-tag>
@@ -66,7 +66,7 @@
       <!-- 进度条 -->
       <div class="mt-2 h-1.5 bg-surface-200 dark:bg-surface-800 rounded-full overflow-hidden">
         <div class="h-full rounded-full transition-all duration-500"
-          :class="temperatureRise.utilization > 100 ? 'bg-semantic-error' : temperatureRise.utilization > 80 ? 'bg-amber-500' : 'bg-emerald-500'"
+          :class="temperatureRise.utilization > 100 ? 'bg-semantic-error' : temperatureRise.utilization > 80 ? 'bg-semantic-warning' : 'bg-semantic-success'"
           :style="{ width: Math.min(temperatureRise.utilization, 100) + '%' }"
         ></div>
       </div>

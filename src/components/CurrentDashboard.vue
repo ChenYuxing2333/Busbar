@@ -8,8 +8,8 @@
         class="stat-card cursor-pointer transition-all duration-200"
         :class="
           activeCircuit === c.key
-            ? 'ring-1 ring-cyan-500/40 shadow-sm'
-            : 'hover:ring-1 hover:ring-slate-600'
+            ? 'ring-1 ring-primary-500/40 shadow-sm'
+            : 'hover:ring-1 hover:ring-surface-400 dark:hover:ring-surface-600'
         "
         :style="{ '--glow-color': c.color }"
         @click="activeCircuit = c.key"
@@ -49,21 +49,21 @@
     <transition name="el-zoom-in-top">
       <div
         v-if="form.batteryEnabled && bat"
-        class="rounded-lg border border-amber-800/40 bg-amber-950/20 p-4"
+        class="rounded-lg border border-semantic-warning/20 bg-semantic-warning/5 p-4"
       >
         <div class="flex items-center gap-2 mb-3">
           <div
-            class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"
+            class="w-1.5 h-1.5 rounded-full bg-semantic-warning animate-pulse"
           ></div>
           <span
-            class="text-[10px] font-bold uppercase tracking-widest text-amber-600"
+            class="text-[10px] font-bold uppercase tracking-widest text-semantic-warning"
           >
             电池回路 DC {{ form.batteryVoltage }}V
           </span>
         </div>
         <div class="grid grid-cols-3 gap-3">
           <div class="text-center">
-            <div class="data-label text-amber-600/70">放电电流</div>
+            <div class="data-label text-semantic-warning/70">放电电流</div>
             <div class="flex items-baseline justify-center gap-1">
               <span class="data-value text-semantic-warning">{{ bat.discharge }}</span>
               <span class="text-sm text-surface-500 dark:text-surface-500 font-mono tabular-nums">A</span>
@@ -72,8 +72,8 @@
               P/(U·η)
             </div>
           </div>
-          <div class="text-center border-x border-amber-900/30">
-            <div class="data-label text-amber-600/70">充电电流</div>
+          <div class="text-center border-x border-semantic-warning/20">
+            <div class="data-label text-semantic-warning/70">充电电流</div>
             <div class="flex items-baseline justify-center gap-1">
               <span
                 class="data-value"
@@ -96,9 +96,9 @@
             </div>
           </div>
           <div class="text-center">
-            <div class="data-label text-amber-600/70">设计电流</div>
+            <div class="data-label text-semantic-warning/70">设计电流</div>
             <div class="flex items-baseline justify-center gap-1">
-              <span class="data-value text-surface-900 dark:text-surface-900 dark:text-surface-900 dark:text-white font-bold">{{
+              <span class="data-value text-surface-900 dark:text-white font-bold">{{
                 bat.design
               }}</span>
               <span class="text-sm text-surface-500 dark:text-surface-500 font-mono tabular-nums">A</span>

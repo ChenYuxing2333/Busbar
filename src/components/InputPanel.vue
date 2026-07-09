@@ -243,7 +243,7 @@
                   :class="
                     form.fanFailure
                       ? 'bg-semantic-error animate-pulse'
-                      : 'bg-slate-600'
+                      : 'bg-surface-600'
                   "
                 ></div>
                 <span class="text-xs text-surface-400 dark:text-surface-500">风扇失效模拟</span>
@@ -611,7 +611,7 @@
       <transition name="el-fade-in">
         <div
           v-if="showResetDialog"
-          class="fixed inset-0 z-[9999] flex items-center justify-center bg-slate-950/80 backdrop-blur-sm px-4"
+          class="fixed inset-0 z-[9999] flex items-center justify-center bg-surface-950/80 backdrop-blur-sm px-4"
         >
           <div
             class="glass-panel p-6 max-w-sm w-full border border-surface-200 dark:border-surface-700/50 shadow-2xl rounded-xl space-y-5"
@@ -632,7 +632,7 @@
             </p>
             <div class="flex gap-3 justify-end pt-2">
               <button
-                class="px-5 py-2.5 rounded-lg text-sm font-medium bg-surface-200 dark:bg-surface-700 text-surface-700 dark:text-surface-300 hover:bg-slate-700 hover:text-surface-900 dark:text-surface-900 dark:text-surface-900 dark:text-white transition-colors flex-1"
+                class="px-5 py-2.5 rounded-lg text-sm font-medium bg-surface-200 dark:bg-surface-700 text-surface-700 dark:text-surface-300 hover:bg-surface-700 hover:text-surface-900 dark:hover:text-white transition-colors flex-1"
                 @click="showResetDialog = false"
               >
                 取消

@@ -73,7 +73,7 @@
             class="font-bold font-mono tabular-nums mb-1"
             :class="
               s.key === 'standard'
-                ? 'text-xl text-slate-100'
+                ? 'text-xl text-surface-100'
                 : 'text-lg text-surface-700 dark:text-surface-300'
             "
           >
@@ -101,7 +101,7 @@
             {{ ((getStrategyItem(s.key)?.loadRate || 0) * 100).toFixed(1) }}%
           </div>
           <!-- 智能平替 (铝排) -->
-          <div v-if="s.key === 'standard' && rec.altAluminum?.standard" class="mt-4 p-3 bg-amber-950/20 border border-amber-900/30 rounded-md">
+          <div v-if="s.key === 'standard' && rec.altAluminum?.standard" class="mt-4 p-3 bg-semantic-warning/5 border border-semantic-warning/20 rounded-md">
             <div class="flex items-center gap-1 mb-1">
               <el-icon class="text-semantic-warning"><ElIconOpportunity /></el-icon>
               <span class="text-xs font-bold text-semantic-warning">平替：推荐铝排规格</span>
@@ -111,7 +111,7 @@
                 <div class="font-mono tabular-nums text-sm text-surface-800 dark:text-surface-200">{{ rec.altAluminum.standard.displaySpec }}</div>
                 <div class="text-[10px] text-surface-500 dark:text-surface-500 mt-0.5">截面 {{ rec.altAluminum.standard.cross_section }}mm² | 载流 {{ rec.altAluminum.standard.realAmp }}A</div>
               </div>
-              <div v-if="getStrategyItem('standard')?.weight" class="text-[10px] px-2 py-1 bg-amber-500/10 text-semantic-warning rounded border border-amber-500/20">
+              <div v-if="getStrategyItem('standard')?.weight" class="text-[10px] px-2 py-1 bg-semantic-warning/10 text-semantic-warning rounded border border-semantic-warning/20">
                 减重 {{ Math.max(0, Math.round((1 - rec.altAluminum.standard.weight / getStrategyItem('standard').weight) * 100)) }}%
               </div>
             </div>
@@ -129,11 +129,11 @@
               "
               class="!w-full"
               :class="{
-                '!bg-red-600 !border-red-600 hover:!bg-semantic-error':
+                '!bg-semantic-error !border-semantic-error hover:!bg-semantic-error/80':
                   s.key === 'economy',
-                '!bg-cyan-600 !border-cyan-600 hover:!bg-cyan-500':
+                '!bg-primary-600 !border-primary-600 hover:!bg-primary-500':
                   s.key === 'standard',
-                '!bg-blue-600 !border-blue-600 hover:!bg-blue-500':
+                '!bg-semantic-info !border-semantic-info hover:!bg-semantic-info/80':
                   s.key === 'premium',
               }"
               @click="copyResult(getStrategyItem(s.key))"

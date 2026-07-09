@@ -1,18 +1,18 @@
 <template>
   <transition name="el-zoom-in-top">
-    <div v-if="form.batteryEnabled" class="glass-panel border-amber-900/40">
+    <div v-if="form.batteryEnabled" class="glass-panel border-semantic-warning/20">
       <!-- 标题栏 -->
       <div
-        class="flex items-center gap-3 px-5 py-4 border-b border-amber-900/30"
+        class="flex items-center gap-3 px-5 py-4 border-b border-semantic-warning/20"
       >
-        <div class="w-2 h-2 rounded-full bg-amber-400"></div>
+        <div class="w-2 h-2 rounded-full bg-semantic-warning"></div>
         <span class="font-bold text-semantic-warning text-sm">电池回路铜排选型</span>
         <span class="text-[10px] text-surface-500 dark:text-surface-500 font-mono tabular-nums"
           >DC {{ form.batteryVoltage }}V · {{ materialLabel }}</span
         >
         <el-tag
           size="small"
-          class="!bg-amber-950/50 !border-amber-700/40 !text-semantic-warning ml-auto"
+          class="!bg-semantic-warning/50 !border-semantic-warning/40 !text-semantic-warning ml-auto"
         >
           IEC 62040 / GB/T 7260
         </el-tag>
@@ -41,11 +41,11 @@
         <template v-else>
           <!-- 电流摘要 -->
           <div
-            class="grid grid-cols-3 gap-3 rounded-lg bg-amber-950/30 border border-amber-900/30 p-4"
+            class="grid grid-cols-3 gap-3 rounded-lg bg-semantic-warning/5 border border-semantic-warning/20 p-4"
           >
             <div class="text-center">
               <div
-                class="text-[10px] text-amber-600/70 uppercase tracking-widest mb-1"
+                class="text-[10px] text-semantic-warning/70 uppercase tracking-widest mb-1"
               >
                 放电电流
               </div>
@@ -58,9 +58,9 @@
                 {{ (form.inverterEff / 100).toFixed(2) }}η
               </div>
             </div>
-            <div class="text-center border-x border-amber-900/30">
+            <div class="text-center border-x border-semantic-warning/20">
               <div
-                class="text-[10px] text-amber-600/70 uppercase tracking-widest mb-1"
+                class="text-[10px] text-semantic-warning/70 uppercase tracking-widest mb-1"
               >
                 充电电流
               </div>
@@ -83,7 +83,7 @@
             </div>
             <div class="text-center">
               <div
-                class="text-[10px] text-amber-600/70 uppercase tracking-widest mb-1"
+                class="text-[10px] text-semantic-warning/70 uppercase tracking-widest mb-1"
               >
                 设计电流
               </div>
@@ -168,7 +168,7 @@
                   :class="{
                     '!bg-red-600 !border-red-600 hover:!bg-semantic-error':
                       s.key === 'economy',
-                    '!bg-amber-600 !border-amber-600 hover:!bg-amber-500':
+                    '!bg-semantic-warning !border-semantic-warning hover:!bg-semantic-warning/80':
                       s.key === 'standard',
                     '!bg-blue-600 !border-blue-600 hover:!bg-blue-500':
                       s.key === 'premium',
@@ -333,17 +333,17 @@ function strategyCardClass(s) {
   const item = getStrategyItem(s.key);
   if (!item) return "border-surface-200 dark:border-surface-800/60 bg-panel-900/50";
   if (s.key === "standard")
-    return "border-amber-800/50 bg-amber-950/20 ring-1 ring-amber-600/20";
-  if (s.key === "economy") return "border-red-900/30 bg-panel-900/50";
-  return "border-blue-900/30 bg-panel-900/50";
+    return "border-semantic-warning/50 bg-semantic-warning/20 ring-1 ring-semantic-warning/20";
+  if (s.key === "economy") return "border-semantic-error/30 bg-panel-900/50";
+  return "border-semantic-info/30 bg-panel-900/50";
 }
 
 function strategyBadgeClass(s) {
   if (s.key === "economy")
     return "bg-semantic-error/10 text-semantic-error border border-red-500/20";
   if (s.key === "standard")
-    return "bg-amber-500/10 text-semantic-warning border border-amber-500/20";
-  return "bg-blue-500/10 text-blue-400 border border-blue-500/20";
+    return "bg-semantic-warning/10 text-semantic-warning border border-semantic-warning/20";
+  return "bg-semantic-info/10 text-semantic-info border border-semantic-info/20";
 }
 
 function copyResult(item) {

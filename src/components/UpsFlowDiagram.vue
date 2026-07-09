@@ -8,42 +8,42 @@
       <!-- Legend -->
       <div class="flex flex-wrap gap-2 text-[10px] font-medium">
         <button 
-          class="flex items-center gap-1.5 transition px-2 py-1.5 rounded bg-surface-200 dark:bg-surface-800 hover:bg-slate-700/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500"
+          class="flex items-center gap-1.5 transition px-2 py-1.5 rounded bg-surface-200 dark:bg-surface-800 hover:bg-surface-700/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500"
           :class="['normal', 'single', 'ess'].includes(activeMode) ? 'opacity-100 text-primary-600 dark:text-primary-400' : 'opacity-40 text-surface-600 dark:text-surface-400'"
           @click="activeMode = 'normal'"
         >
           <div class="w-3 h-0.5 bg-cyan-400 shadow-[0_0_8px_rgba(34,211,238,0.8)]"></div> 主路市电模式
         </button>
         <button 
-          class="flex items-center gap-1.5 transition px-2 py-1.5 rounded bg-surface-200 dark:bg-surface-800 hover:bg-slate-700/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500"
-          :class="activeMode === 'single' ? 'opacity-100 text-primary-600 dark:text-primary-400 ring-1 ring-cyan-500/50' : 'opacity-40 text-surface-600 dark:text-surface-400'"
+          class="flex items-center gap-1.5 transition px-2 py-1.5 rounded bg-surface-200 dark:bg-surface-800 hover:bg-surface-700/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500"
+          :class="activeMode === 'single' ? 'opacity-100 text-primary-600 dark:text-primary-400 ring-1 ring-primary-500/50' : 'opacity-40 text-surface-600 dark:text-surface-400'"
           @click="activeMode = 'single'"
         >
           <div class="w-3 h-0.5 bg-cyan-400 shadow-[0_0_8px_rgba(34,211,238,0.8)]"></div> 单输入模式
         </button>
         <button 
-          class="flex items-center gap-1.5 transition px-2 py-1.5 rounded bg-surface-200 dark:bg-surface-800 hover:bg-slate-700/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500"
-          :class="activeMode === 'ess' ? 'opacity-100 text-primary-600 dark:text-primary-400 border border-cyan-500/50' : 'opacity-40 text-surface-600 dark:text-surface-400'"
+          class="flex items-center gap-1.5 transition px-2 py-1.5 rounded bg-surface-200 dark:bg-surface-800 hover:bg-surface-700/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500"
+          :class="activeMode === 'ess' ? 'opacity-100 text-primary-600 dark:text-primary-400 border border-primary-500/50' : 'opacity-40 text-surface-600 dark:text-surface-400'"
           @click="activeMode = 'ess'"
         >
           <div class="w-3 h-0.5 bg-cyan-400 shadow-[0_0_8px_rgba(34,211,238,0.8)]"></div> ESS 节能模式
         </button>
         <button 
-          class="flex items-center gap-1.5 transition px-2 py-1.5 rounded bg-surface-200 dark:bg-surface-800 hover:bg-slate-700/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500"
+          class="flex items-center gap-1.5 transition px-2 py-1.5 rounded bg-surface-200 dark:bg-surface-800 hover:bg-surface-700/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500"
           :class="activeMode === 'bypass' ? 'opacity-100 text-semantic-warning' : 'opacity-40 text-surface-600 dark:text-surface-400'"
           @click="activeMode = 'bypass'"
         >
           <div class="w-3 h-0.5 bg-amber-400 shadow-[0_0_8px_rgba(251,191,36,0.8)]"></div> 旁路供电模式
         </button>
         <button 
-          class="flex items-center gap-1.5 transition px-2 py-1.5 rounded bg-surface-200 dark:bg-surface-800 hover:bg-slate-700/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500"
+          class="flex items-center gap-1.5 transition px-2 py-1.5 rounded bg-surface-200 dark:bg-surface-800 hover:bg-surface-700/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500"
           :class="activeMode === 'battery' ? 'opacity-100 text-semantic-success' : 'opacity-40 text-surface-600 dark:text-surface-400'"
           @click="activeMode = 'battery'"
         >
           <div class="w-3 h-0.5 bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.8)]"></div> 电池逆变模式
         </button>
         <button 
-          class="flex items-center gap-1.5 transition px-2 py-1.5 rounded bg-surface-200 dark:bg-surface-800 hover:bg-slate-700/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-500"
+          class="flex items-center gap-1.5 transition px-2 py-1.5 rounded bg-surface-200 dark:bg-surface-800 hover:bg-surface-700/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary-500"
           :class="activeMode === 'maintenance' ? 'opacity-100 text-purple-400' : 'opacity-40 text-surface-600 dark:text-surface-400'"
           @click="activeMode = 'maintenance'"
         >

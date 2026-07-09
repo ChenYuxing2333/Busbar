@@ -74,7 +74,7 @@
     </div>
 
     <!-- 分隔线 -->
-    <div class="h-px bg-slate-700/50 my-3"></div>
+    <div class="h-px bg-surface-700/50 my-3"></div>
 
     <!-- 最终结果 -->
     <div class="flex items-center justify-between">
@@ -83,10 +83,10 @@
         <span
           class="font-mono tabular-nums text-base font-bold px-2 py-0.5 rounded transition-all duration-300"
           :class="correctionK.total >= 1 
-            ? 'text-semantic-success bg-emerald-950/30 border border-emerald-800/30' 
+            ? 'text-semantic-success bg-semantic-success/5 border border-semantic-success/20' 
             : correctionK.total >= 0.85
-              ? 'text-semantic-warning bg-amber-950/30 border border-amber-800/30'
-              : 'text-semantic-error bg-red-950/30 border border-red-800/30'"
+              ? 'text-semantic-warning bg-semantic-warning/5 border border-semantic-warning/20'
+              : 'text-semantic-error bg-semantic-error/5 border border-semantic-error/20'"
         >
           K = {{ correctionK.total.toFixed(3) }}
         </span>

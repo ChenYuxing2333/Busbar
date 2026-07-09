@@ -1,12 +1,12 @@
-﻿<template>
+<template>
   <div class="glass-panel p-5">
     <div class="flex items-center gap-2 mb-4">
       <el-icon class="text-purple-400"><ElIconConnection /></el-icon>
-      <h3 class="text-sm font-bold text-surface-700 dark:text-surface-300">连接工艺</h3>
-      <!-- 进度指示 -->
+      <h3 class="text-sm font-bold text-surface-700 dark:text-surface-300">���ӹ���</h3>
+      <!-- ����ָʾ -->
       <div v-if="spec" class="ml-auto flex items-center gap-1.5">
         <template v-if="allChecked">
-          <span class="text-[11px] text-semantic-success font-bold">✅ 已确认</span>
+          <span class="text-[11px] text-semantic-success font-bold">? ��ȷ��</span>
         </template>
         <template v-else>
           <span class="text-[11px] text-surface-500 dark:text-surface-500 font-mono tabular-nums">{{ checkedCount }}/{{ totalNotes }}</span>
@@ -15,20 +15,20 @@
               class="h-full rounded-full bg-purple-500 transition-all duration-300"
               :style="{ width: (checkedCount / totalNotes * 100) + '%' }"
             ></div>
-      <!-- BOM 导出 -->
+      <!-- BOM ���� -->
       <div class="mt-4 pt-3 border-t border-surface-200 dark:border-surface-800/60">
-        <el-button type="warning" size="default" class="!w-full !bg-amber-600 !border-amber-600 hover:!bg-amber-500" @click="exportBOM">
+        <el-button type="warning" size="default" class="!w-full !bg-semantic-warning !border-semantic-warning hover:!bg-semantic-warning/80" @click="exportBOM">
           <el-icon class="mr-1"><ElIconDocumentCopy /></el-icon>
-          导出紧固件 BOM 清单
+          �������̼� BOM �嵥
         </el-button>
-        <div class="text-[10px] text-surface-500 dark:text-surface-400 mt-2 text-center">包含螺栓/垫圈规格、数量、扭矩值</div>
+        <div class="text-[10px] text-surface-500 dark:text-surface-400 mt-2 text-center">������˨/��Ȧ���������Ť��ֵ</div>
       </div>
           </div>
         </template>
       </div>
     </div>
 
-    <!-- 连接类型选择 -->
+    <!-- ��������ѡ�� -->
     <div class="flex gap-2 mb-4">
       <button
         v-for="opt in connectionOptions"
@@ -40,26 +40,26 @@
         @click="selectedConnection = opt.key"
       >
         {{ opt.label }}
-        <!-- 推荐标记 -->
+        <!-- �Ƽ���� -->
         <span
           v-if="opt.key === recommendedConnection"
-          class="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-cyan-400"
-          title="根据材料推荐"
+          class="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-primary-400"
+          title="���ݲ����Ƽ�"
         ></span>
       </button>
     </div>
 
-    <!-- 铜-铝 警告 -->
+    <!-- ͭ-�� ���� -->
     <transition name="el-zoom-in-top">
       <div
         v-if="selectedConnection === 'copper-aluminum'"
-        class="mb-4 rounded-lg bg-red-950/30 border border-red-800/30 p-3"
+        class="mb-4 rounded-lg bg-semantic-error/5 border border-semantic-error/20 p-3"
       >
         <div class="flex items-start gap-2">
           <el-icon class="text-semantic-error mt-0.5 shrink-0"><ElIconWarningFilled /></el-icon>
           <div>
-            <div class="text-xs font-bold text-semantic-error mb-1">铜-铝混接注意事项</div>
-            <div class="text-[11px] text-semantic-error/70">严禁使用铜质弹簧垫圈（电偶腐蚀风险）</div>
+            <div class="text-xs font-bold text-semantic-error mb-1">ͭ-�����ע������</div>
+            <div class="text-[11px] text-semantic-error/70">�Ͻ�ʹ��ͭ�ʵ��ɵ�Ȧ����ż��ʴ���գ�</div>
             <div class="flex flex-wrap gap-1.5 mt-2">
               <span
                 v-for="tag in fourElements"
@@ -72,17 +72,17 @@
       </div>
     </transition>
 
-    <!-- 工艺详情 -->
+    <!-- �������� -->
     <div v-if="spec" class="space-y-3 text-xs">
-      <!-- 镀层要求 -->
+      <!-- �Ʋ�Ҫ�� -->
       <div class="rounded-lg bg-surface-50 dark:bg-surface-950 border border-surface-200 dark:border-surface-800/60 p-3">
-        <div class="data-label mb-1 text-purple-400/70">镀层要求</div>
+        <div class="data-label mb-1 text-purple-400/70">�Ʋ�Ҫ��</div>
         <div class="text-surface-700 dark:text-surface-300">{{ spec.coating }}</div>
       </div>
 
-      <!-- 紧固件配置 -->
+      <!-- ���̼����� -->
       <div class="rounded-lg bg-surface-50 dark:bg-surface-950 border border-surface-200 dark:border-surface-800/60 p-3">
-        <div class="data-label mb-1.5 text-purple-400/70">紧固件 &amp; 扭力</div>
+        <div class="data-label mb-1.5 text-purple-400/70">���̼� &amp; Ť��</div>
         <div class="space-y-1.5">
           <div
             v-for="hw in spec.hardware"
@@ -92,7 +92,7 @@
           >
             <span class="font-mono tabular-nums text-surface-700 dark:text-surface-300">
               {{ hw.bolt }}
-              <span v-if="isMatchedHardware(hw)" class="text-purple-400 text-[10px] ml-1">← 匹配</span>
+              <span v-if="isMatchedHardware(hw)" class="text-purple-400 text-[10px] ml-1">�� ƥ��</span>
             </span>
             <span class="text-semantic-warning font-mono tabular-nums">{{ hw.torque }}</span>
             <span class="text-surface-500 dark:text-surface-400">{{ hw.forBusbar }}</span>
@@ -100,21 +100,21 @@
         </div>
       </div>
 
-      <!-- 垫圈 -->
+      <!-- ��Ȧ -->
       <div class="rounded-lg bg-surface-50 dark:bg-surface-950 border border-surface-200 dark:border-surface-800/60 p-3">
-        <div class="data-label mb-1 text-purple-400/70">垫圈配置</div>
+        <div class="data-label mb-1 text-purple-400/70">��Ȧ����</div>
         <div class="text-surface-700 dark:text-surface-300">{{ spec.washer }}</div>
       </div>
 
-      <!-- 施工检查清单 -->
+      <!-- ʩ������嵥 -->
       <div class="rounded-lg bg-surface-50 dark:bg-surface-950 border border-surface-200 dark:border-surface-800/60 p-3">
         <div class="data-label mb-1.5 text-purple-400/70 flex items-center justify-between">
-          <span>施工检查清单</span>
+          <span>ʩ������嵥</span>
           <button
             v-if="checkedCount > 0"
             class="text-[10px] text-surface-500 dark:text-surface-400 hover:text-surface-600 dark:text-surface-400 transition-colors"
             @click="resetChecks"
-          >重置</button>
+          >����</button>
         </div>
         <ul class="space-y-1.5">
           <li
@@ -130,7 +130,7 @@
                 ? 'bg-emerald-500 border-emerald-500 text-surface-900 dark:text-surface-900 dark:text-surface-900 dark:text-white'
                 : 'border-surface-300 dark:border-surface-600 group-hover:border-purple-500'"
             >
-              <span v-if="checkedNotes[idx]" class="text-[10px]">✓</span>
+              <span v-if="checkedNotes[idx]" class="text-[10px]">?</span>
             </div>
             <span
               class="transition-all duration-200"
@@ -140,19 +140,19 @@
         </ul>
       </div>
 
-      <!-- 维护周期 -->
-      <div class="flex items-center gap-2 rounded-lg bg-amber-950/20 border border-amber-900/30 p-3">
+      <!-- ά������ -->
+      <div class="flex items-center gap-2 rounded-lg bg-semantic-warning/5 border border-semantic-warning/20 p-3">
         <el-icon class="text-semantic-warning"><ElIconAlarmClock /></el-icon>
         <span class="text-semantic-warning/80">{{ spec.maintenance }}</span>
       </div>
     </div>
-      <!-- BOM 导出 -->
+      <!-- BOM ���� -->
       <div class="mt-4 pt-3 border-t border-surface-200 dark:border-surface-800/60">
-        <el-button type="warning" size="default" class="!w-full !bg-amber-600 !border-amber-600 hover:!bg-amber-500" @click="exportBOM">
+        <el-button type="warning" size="default" class="!w-full !bg-semantic-warning !border-semantic-warning hover:!bg-semantic-warning/80" @click="exportBOM">
           <el-icon class="mr-1"><ElIconDocumentCopy /></el-icon>
-          导出紧固件 BOM 清单
+          �������̼� BOM �嵥
         </el-button>
-        <div class="text-[10px] text-surface-500 dark:text-surface-400 mt-2 text-center">包含螺栓/垫圈规格、数量、扭矩值</div>
+        <div class="text-[10px] text-surface-500 dark:text-surface-400 mt-2 text-center">������˨/��Ȧ���������Ť��ֵ</div>
       </div>
   </div>
 </template>
@@ -165,32 +165,32 @@ import { CONNECTION_SPEC } from '../constants/index.js';
 const { form, activeRecommendation } = useSmartBusbar();
 
 const connectionOptions = [
-  { key: 'copper-copper',     label: '铜-铜' },
-  { key: 'copper-aluminum',   label: '铜-铝' },
-  { key: 'aluminum-aluminum', label: '铝-铝' },
+  { key: 'copper-copper',     label: 'ͭ-ͭ' },
+  { key: 'copper-aluminum',   label: 'ͭ-��' },
+  { key: 'aluminum-aluminum', label: '��-��' },
 ];
 
-const fourElements = ['双面镀锡', '碟簧补偿', '力矩降低30%', '24h复紧'];
+const fourElements = ['˫�����', '���ɲ���', '���ؽ���30%', '24h����'];
 
 const selectedConnection = ref('copper-copper');
 
-// 推荐的连接类型
+// �Ƽ�����������
 const recommendedConnection = computed(() => {
   return form.material === 'aluminum' ? 'aluminum-aluminum' : 'copper-copper';
 });
 
-// 材料变化时自动切换连接类型
+// ���ϱ仯ʱ�Զ��л���������
 watch(() => form.material, (mat) => {
   selectedConnection.value = mat === 'aluminum' ? 'aluminum-aluminum' : 'copper-copper';
   resetChecks();
 }, { immediate: false });
 
-// 当前工艺规范
+// ��ǰ���չ淶
 const spec = computed(() => {
   return CONNECTION_SPEC[selectedConnection.value] || null;
 });
 
-// 施工检查状态
+// ʩ�����״̬
 const checkedNotes = reactive({});
 
 const totalNotes = computed(() => {
@@ -219,27 +219,27 @@ function resetChecks() {
   }
 }
 
-// 切换连接类型时重置勾选
+// �л���������ʱ���ù�ѡ
 watch(selectedConnection, () => {
   resetChecks();
 });
 
-// 紧固件自动匹配
+// ���̼��Զ�ƥ��
 function isMatchedHardware(hw) {
   const rec = activeRecommendation.value;
   if (!rec || rec.error || !rec.standard) return false;
   const spec = rec.standard.displaySpec || '';
   const forBusbar = hw.forBusbar || '';
-  // 简单匹配：检查推荐规格中的宽度×厚度是否在紧固件适用范围
+  // ��ƥ�䣺����Ƽ�����еĿ��ȡ�����Ƿ��ڽ��̼����÷�Χ
   if (!forBusbar) return false;
   const width = rec.standard.width;
   const thick = rec.standard.thick;
   if (!width || !thick) return false;
-  const busbarSpec = `${width}×${thick}`;
+  const busbarSpec = `${width}��${thick}`;
   return forBusbar.includes(busbarSpec) || forBusbar.includes(`${width}x${thick}`);
 }
 
-// 生成紧固件 BOM
+// ���ɽ��̼� BOM
 function generateFastenerBOM() {
   if (!spec.value) return null;
   const rec = activeRecommendation.value;
@@ -249,7 +249,7 @@ function generateFastenerBOM() {
     if (!h.forBusbar) return false;
     const parts = h.forBusbar.split('~');
     if (parts.length !== 2) return false;
-    const parse = str => { const m=str.match(/(\d+)[×x](\d+)/); return m?{w:+m[1],t:+m[2]}:null; };
+    const parse = str => { const m=str.match(/(\d+)[��x](\d+)/); return m?{w:+m[1],t:+m[2]}:null; };
     const [min,max] = parts.map(parse);
     return min && max && w>=min.w && w<=max.w && t>=min.t && t<=max.t;
   });
@@ -258,38 +258,38 @@ function generateFastenerBOM() {
   const ds = {M8:'DIN 2093-A10',M10:'DIN 2093-A12.5',M12:'DIN 2093-A16',M16:'DIN 2093-B20'}[hw.bolt]||'DIN 2093';
   const ws = {M8:'DIN 9021 M8',M10:'DIN 9021 M10',M12:'DIN 9021 M12',M16:'DIN 9021 M16'}[hw.bolt]||'DIN 9021';
   return {
-    bolt: {size:hw.bolt, grade:form.material==='aluminum'?'8.8 级':'10.9 级', torque:hw.torque, qty:boltCnt, note:form.material==='aluminum'?'铝排扭矩降 30%':'标准扭矩'},
-    washers: {flat:{spec:ws,type:'加大平垫',qty:boltCnt,std:'DIN 9021'}, disc:{spec:ds,type:'碟簧⭐防冷流',qty:boltCnt,std:'DIN 2093'}},
+    bolt: {size:hw.bolt, grade:form.material==='aluminum'?'8.8 ��':'10.9 ��', torque:hw.torque, qty:boltCnt, note:form.material==='aluminum'?'����Ť�ؽ� 30%':'��׼Ť��'},
+    washers: {flat:{spec:ws,type:'�Ӵ�ƽ��',qty:boltCnt,std:'DIN 9021'}, disc:{spec:ds,type:'����?������',qty:boltCnt,std:'DIN 2093'}},
     plating: spec.value.coating, total: boltCnt*3
   };
 }
 
-// 导出 BOM
+// ���� BOM
 function exportBOM() {
   const bom = generateFastenerBOM();
-  if (!bom) { ElMessage.warning('无法生成 BOM'); return; }
+  if (!bom) { ElMessage.warning('�޷����� BOM'); return; }
   const ts = new Date().toISOString().slice(0,16).replace('T','_');
   const txt = `====================================
-SmartBusbar - 紧固件 BOM 清单
+SmartBusbar - ���̼� BOM �嵥
 ====================================
-回路：${activeCircuit.value}  时间：${ts}
-连接：${spec.value.title}  母排：${activeRecommendation.value.standard.displaySpec}
+��·��${activeCircuit.value}  ʱ�䣺${ts}
+���ӣ�${spec.value.title}  ĸ�ţ�${activeRecommendation.value.standard.displaySpec}
 
-【螺栓】${bom.bolt.size} ${bom.bolt.grade}
-扭矩：${bom.bolt.torque}  数量：${bom.bolt.qty}件
-备注：${bom.bolt.note}
+����˨��${bom.bolt.size} ${bom.bolt.grade}
+Ť�أ�${bom.bolt.torque}  ������${bom.bolt.qty}��
+��ע��${bom.bolt.note}
 
-【垫圈】
-平垫：${bom.washers.flat.spec} ${bom.washers.flat.qty}件
-碟簧：${bom.washers.disc.spec} ${bom.washers.disc.qty}件
+����Ȧ��
+ƽ�棺${bom.washers.flat.spec} ${bom.washers.flat.qty}��
+���ɣ�${bom.washers.disc.spec} ${bom.washers.disc.qty}��
 
-【镀层】${bom.plating}
-【合计】${bom.total}件
+���Ʋ㡿${bom.plating}
+���ϼơ�${bom.total}��
 
-【要点】
-1.铝排扭矩降 30%  2.必用碟簧  3.24h 复紧
-4.涂导电脂  5.1 月后复检
+��Ҫ�㡿
+1.����Ť�ؽ� 30%  2.���õ���  3.24h ����
+4.Ϳ����֬  5.1 �º󸴼�
 ====================================`;
-  navigator.clipboard.writeText(txt).then(()=>ElMessage.success('BOM 已复制')).catch(()=>ElMessage.error('复制失败'));
+  navigator.clipboard.writeText(txt).then(()=>ElMessage.success('BOM �Ѹ���')).catch(()=>ElMessage.error('����ʧ��'));
 }
 </script>
